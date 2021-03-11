@@ -5,15 +5,21 @@ python:
   - 3.9
   - 3.8
   - 3.7
-  - 3.6
-  - 3.5
 
 # Command to install dependencies, e.g. pip install -r requirements.txt --use-mirrors
-install: pip install -U tox-travis
+before_install:
+  - python --version
+  - pip install -U pip
+  - pip install -U pytest
+  - pip install codecov
+
+install: pip install "."
 
 # Command to run tests, e.g. python setup.py test
-script: tox
+script: pytest
 
+after_success:
+  - codecov
 # Assuming you have installed the travis-ci CLI tool, after you
 # create the Github repo and add it to Travis, run the
 # following command to finish PyPI deployment setup:
