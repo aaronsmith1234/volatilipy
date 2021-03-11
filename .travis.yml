@@ -29,7 +29,7 @@ deploy:
   distributions: sdist bdist_wheel
   user: aaronsmith1234
   password:
-    secure: PLEASE_REPLACE_ME
+    secure: "HAc1MYr12TlrYgt+/OkbFKuVO+53HWH0LeqnfASaR+EtHriB+dXLURAeQkrcdWYqWiAYZvY1pK0iAqKtgq4NMjQS7LgnpALA5Qk+N9lU3eYybcsgqIKmcrQWd99DUj1YfjcqqfgjnCLwH8PNp78UHKomAJnu0Vl1IHE/GBCxCRd/UmlsrPvEJckQMJOtazBac7DEYplJmJrp2H6sOiwOrvDGkbimQkPSCgad/kzKgETAprUqmv9YhuIYKzB7k7wCw0b/qrZJR8pll0J6zXXi4wjpc+YdSK/gfrwKVt1ZH1m4eYE4IcsFXNivCMKAyIROKyGRmh3zHtk24xlzsd0/L+ufok4GSYBXQ3KD3VgQ+TWnP2l975uOoxusSUnpe40c/G/jLu08UuXPHVb5xbQOShLw97zKCD8FW0AobrJnbW6If6zA4cZ0WVxJ/0Hs6155wFqkUwo7ohgoRXoLztACxy/4W6hoEVanOrXBX5P2t1EXxx5BL0hROuewZR0/ESFB5XuTtCgNCrh/giYOUFqB4/upYDns+Ziexb+z8WTrmbKsVs6V7bL4ipy5Bnu2iVTl+mHIGYFMvBkCp269tgz4fEsmVVQwJosMCryRR4chmfudvNP9AAiSWciS/tpg+3+fXzUBWAa4vH6vOvzP5CLcuBKyuS7/psMNOzw7GUl3V3w="
   on:
     tags: true
     repo: aaronsmith1234/volatilipy
