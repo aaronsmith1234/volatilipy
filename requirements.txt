@@ -1,0 +1,2 @@
+pandas>=1.1.4
+QuantLib>=1.20
