@@ -9,12 +9,12 @@ import volatilipy as vp
 
 
 @pytest.fixture
-def valuation_date():
+def valuation_date() -> datetime:
     return datetime(2030, 12, 31)
 
 
 @pytest.fixture
-def options_data(valuation_date):
+def options_data(valuation_date) -> pd.DataFrame:
     raw_options_df = pd.read_csv(
         "tests/test_support_files/dummyOptionsData.csv",
         parse_dates=["quote_date", "expiration"],
@@ -22,6 +22,16 @@ def options_data(valuation_date):
     options_data = vp.OptionsData(valuation_date, raw_options_df)
     options_data.calculate_volatility_grid()
     return options_data
+
+
+@pytest.fixture
+def volatility_grid() -> pd.DataFrame:
+    raw_vol_df = pd.read_csv(
+        "tests/test_support_files/dummyVolatilityGrid.csv",
+        parse_dates=["expiration"],
+        index_col="expiration",
+    )
+    return raw_vol_df
 
 
 @pytest.fixture
@@ -34,6 +44,16 @@ def mock_vol_surface(options_data: vp.OptionsData) -> vp.VolatilitySurface:
 def test_render_vol_surface(options_data: vp.OptionsData):
 
     vol_surface = vp.VolatilitySurface(options_data)
+    assert vol_surface.blackVol(1, 3123) == pytest.approx(1.0742223)
+
+
+def test_render_vol_surface_with_vol_grid(
+    valuation_date: datetime, volatility_grid: pd.DataFrame
+):
+
+    vol_surface = vp.VolatilitySurface(
+        valuation_date=valuation_date, volatility_grid=volatility_grid
+    )
     assert vol_surface.blackVol(1, 3123) == pytest.approx(1.0742223)
 
 

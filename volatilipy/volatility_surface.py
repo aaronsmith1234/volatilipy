@@ -1,6 +1,7 @@
 """Volatility Surface Class - extension of BlackVarianceSurface object from QuantLib"""
 
 
+from datetime import datetime
 import pandas as pd
 import QuantLib as ql
 
@@ -36,20 +37,32 @@ class VolatilitySurface(ql.BlackVarianceSurface):
 
     def __init__(
         self,
-        options_data: OptionsData,
+        options_data: OptionsData = None,
+        volatility_grid: pd.DataFrame = None,
         day_count: ql.DayCounter = ql.ActualActual(),
         calendar: ql.Calendar = ql.UnitedStates(),
         allow_extrapolation: bool = False,
+        valuation_date: datetime = None,
         interpolation_method: str = "Bilinear",
     ):
-        valuation_date = _create_ql_date(options_data.valuation_date)
+        # assign valuation date for the Quantlib object, either by extracting from the options
+        # data object, or by an explicilty passed parameter
+        if valuation_date is not None:
+            valuation_date = _create_ql_date(valuation_date)
+        else:
+            valuation_date = _create_ql_date(options_data.valuation_date)
+
+        if options_data is not None:
+            vol_grid = options_data.volatility_grid
+        else:
+            vol_grid = volatility_grid
 
         # convert expiration dates to quantlib Dates
-        dates = pd.to_datetime((options_data.volatility_grid.axes[0]).tolist())
+        dates = pd.to_datetime((vol_grid.axes[0]).tolist())
         expiration_dates = list(map(_create_ql_date, dates))
 
-        strikes = options_data.volatility_grid.axes[1].tolist()
-        vol_data = options_data.volatility_grid.values.tolist()
+        strikes = vol_grid.axes[1].tolist()
+        vol_data = vol_grid.values.tolist()
 
         implied_vols = _create_ql_vol_grid(expiration_dates, strikes, vol_data)
         super().__init__(
