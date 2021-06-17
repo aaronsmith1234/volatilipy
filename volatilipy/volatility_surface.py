@@ -58,6 +58,10 @@ class VolatilitySurface(ql.BlackVarianceSurface):
         if isinstance(vol_grid.columns, pd.core.indexes.base.Index):
             vol_grid.columns = vol_grid.columns.astype(int)
 
+        # drop valdate if its in the index, QuantLib gives a garbage error about datesbeing sorted
+        # unique, but it is also from valdate being in index
+        idx = vol_grid.index == valuation_date
+        vol_grid = vol_grid.loc[~idx, :]
         # convert expiration dates to quantlib Dates
         dates = pd.to_datetime((vol_grid.axes[0]).tolist())
         expiration_dates = list(map(_create_ql_date, dates))

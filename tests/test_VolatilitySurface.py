@@ -57,6 +57,18 @@ def test_render_vol_surface_with_vol_grid(
     assert vol_surface.blackVol(1, 3123) == pytest.approx(1.0742223)
 
 
+def test_render_vol_surface_with_vol_grid_valdate_in_index(
+    valuation_date: datetime, volatility_grid: pd.DataFrame
+):
+    # before the fix, this would result in a runtime error
+    as_list = volatility_grid.index.tolist()
+    as_list[0] = valuation_date
+    volatility_grid.index = as_list
+    vol_surface = vp.VolatilitySurface(
+        valuation_date=valuation_date, volatility_grid=volatility_grid
+    )
+
+
 def test_vol_surface_extrapolation_fails(options_data: vp.OptionsData):
 
     vol_surface = vp.VolatilitySurface(options_data)
