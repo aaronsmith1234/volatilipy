@@ -48,19 +48,19 @@ clean-test: ## remove test and coverage artifacts
 	rm -fr .pytest_cache
 
 lint: ## check style with flake8
-	flake8 volatilipy tests
+	pylint volatilipy
 
 test: ## run tests quickly with the default Python
 	pytest
 
+test-cov:
+	pytest --cov --cov-report html
+	$(BROWSER) htmlcov/index.html
+
 test-all: ## run tests on every Python version with tox
 	tox
 
-coverage: ## check code coverage quickly with the default Python
-	coverage run --source volatilipy -m pytest
-	coverage report -m
-	coverage html
-	$(BROWSER) htmlcov/index.html
+coverage: test-cov
 
 docs: ## generate Sphinx HTML documentation, including API docs
 	rm -f docs/volatilipy.rst

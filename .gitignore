@@ -127,3 +127,7 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+grid.csv
+surface.csv
+sandbox.py
+tests/test_support_files/testOptionsDataExport.csv

@@ -1,6 +1,7 @@
 """Volatility Surface Class - extension of BlackVarianceSurface object from QuantLib"""
 
 
+from datetime import datetime
 import pandas as pd
 import QuantLib as ql
 
@@ -36,24 +37,46 @@ class VolatilitySurface(ql.BlackVarianceSurface):
 
     def __init__(
         self,
-        options_data: OptionsData,
+        options_data: OptionsData = None,
+        volatility_grid: pd.DataFrame = None,
         day_count: ql.DayCounter = ql.ActualActual(),
         calendar: ql.Calendar = ql.UnitedStates(),
         allow_extrapolation: bool = False,
+        valuation_date: datetime = None,
         interpolation_method: str = "Bilinear",
     ):
-        valuation_date = _create_ql_date(options_data.valuation_date)
+        # extract relevant parameters from options_data object if its passed
+        if options_data is not None:
+            vol_grid = options_data.volatility_grid
+            valuation_date = options_data.valuation_date
+        else:
+            vol_grid = volatility_grid
 
+        valuation_date_for_ql = _create_ql_date(valuation_date)
+
+        # index must be an int64 index (possibly float, haven't tried!), so convert if needed
+        if isinstance(vol_grid.columns, pd.core.indexes.base.Index):
+            vol_grid.columns = vol_grid.columns.astype(int)
+
+        # drop valdate if its in the index, QuantLib gives a garbage error about datesbeing sorted
+        # unique, but it is also from valdate being in index
+        idx = vol_grid.index == valuation_date
+        vol_grid = vol_grid.loc[~idx, :]
         # convert expiration dates to quantlib Dates
-        dates = pd.to_datetime((options_data.volatility_grid.axes[0]).tolist())
+        dates = pd.to_datetime((vol_grid.axes[0]).tolist())
         expiration_dates = list(map(_create_ql_date, dates))
 
-        strikes = options_data.volatility_grid.axes[1].tolist()
-        vol_data = options_data.volatility_grid.values.tolist()
+        strikes = vol_grid.axes[1].tolist()
+        vol_data = vol_grid.values.tolist()
 
         implied_vols = _create_ql_vol_grid(expiration_dates, strikes, vol_data)
         super().__init__(
-            valuation_date, calendar, expiration_dates, strikes, implied_vols, day_count
+            valuation_date_for_ql,
+            calendar,
+            expiration_dates,
+            strikes,
+            implied_vols,
+            day_count,
         )
         if allow_extrapolation is True:
             self.enableExtrapolation()
