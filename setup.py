@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 """The setup script."""
-
+import volatilipy
 from setuptools import setup, find_packages
 
 with open("README.rst") as readme_file:
@@ -47,6 +47,6 @@ setup(
     test_suite="tests",
     tests_require=test_requirements,
     url="https://github.com/aaronsmith1234/volatilipy",
-    version="0.1.1",
+    version=volatilipy.__version__,
     zip_safe=False,
 )
