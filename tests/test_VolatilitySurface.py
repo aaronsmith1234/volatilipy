@@ -67,6 +67,7 @@ def test_render_vol_surface_with_vol_grid_valdate_in_index(
     vol_surface = vp.VolatilitySurface(
         valuation_date=valuation_date, volatility_grid=volatility_grid
     )
+    assert vol_surface.blackVol(1, 3123) == pytest.approx(1.0742223)
 
 
 def test_vol_surface_extrapolation_fails(options_data: vp.OptionsData):
