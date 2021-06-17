@@ -48,10 +48,11 @@ class VolatilitySurface(ql.BlackVarianceSurface):
         # extract relevant parameters from options_data object if its passed
         if options_data is not None:
             vol_grid = options_data.volatility_grid
-            valuation_date = _create_ql_date(options_data.valuation_date)
+            valuation_date = options_data.valuation_date
         else:
             vol_grid = volatility_grid
-            valuation_date = _create_ql_date(valuation_date)
+
+        valuation_date_for_ql = _create_ql_date(valuation_date)
 
         # index must be an int64 index (possibly float, haven't tried!), so convert if needed
         if isinstance(vol_grid.columns, pd.core.indexes.base.Index):
@@ -66,7 +67,12 @@ class VolatilitySurface(ql.BlackVarianceSurface):
 
         implied_vols = _create_ql_vol_grid(expiration_dates, strikes, vol_data)
         super().__init__(
-            valuation_date, calendar, expiration_dates, strikes, implied_vols, day_count
+            valuation_date_for_ql,
+            calendar,
+            expiration_dates,
+            strikes,
+            implied_vols,
+            day_count,
         )
         if allow_extrapolation is True:
             self.enableExtrapolation()
