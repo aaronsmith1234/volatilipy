@@ -226,3 +226,10 @@ def test_vol_grid_both(dummy_options_data_format2):
     assert dummy_options_data_format2.volatility_grid[1400][6] == pytest.approx(
         2.161576293
     )
+
+
+def test_file_export(dummy_options_data_format2: vp.OptionsData):
+    dummy_options_data_format2.calculate_volatility_grid(
+        fit_on_calls_or_puts="both",
+        to_file_filename="tests/test_support_files/testOptionsDataExport.csv",
+    )
