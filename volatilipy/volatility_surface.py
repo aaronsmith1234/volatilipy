@@ -45,17 +45,17 @@ class VolatilitySurface(ql.BlackVarianceSurface):
         valuation_date: datetime = None,
         interpolation_method: str = "Bilinear",
     ):
-        # assign valuation date for the Quantlib object, either by extracting from the options
-        # data object, or by an explicilty passed parameter
-        if valuation_date is not None:
-            valuation_date = _create_ql_date(valuation_date)
-        else:
-            valuation_date = _create_ql_date(options_data.valuation_date)
-
+        # extract relevant parameters from options_data object if its passed
         if options_data is not None:
             vol_grid = options_data.volatility_grid
+            valuation_date = _create_ql_date(options_data.valuation_date)
         else:
             vol_grid = volatility_grid
+            valuation_date = _create_ql_date(valuation_date)
+
+        # index must be an int64 index (possibly float, haven't tried!), so convert if needed
+        if isinstance(vol_grid.columns, pd.core.indexes.base.Index):
+            vol_grid.columns = vol_grid.columns.astype(int)
 
         # convert expiration dates to quantlib Dates
         dates = pd.to_datetime((vol_grid.axes[0]).tolist())
