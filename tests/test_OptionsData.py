@@ -13,7 +13,7 @@ import volatilipy as vp
 
 
 @pytest.fixture
-def dummy_position_data_format1():
+def dummy_position_data_format1() -> pd.DataFrame:
     positionData = StringIO(
         """optionID,sTrIke,EXERCISEDATE,positionType,units,OPT_PX,option_type,mid_eod
 S01-00161,3034.68,10/15/2020,long,1154.63167,205.15,C,203.15
@@ -50,7 +50,7 @@ def dummy_options_data_format2() -> vp.OptionsData:
 
 
 @pytest.fixture
-def dummy_rfr_data():
+def dummy_rfr_data() -> pd.DataFrame:
     rateData = StringIO(
         """date_index,SPOT_RATE_EFF_ANN
             10/13/2020,0.00061346
@@ -68,7 +68,7 @@ def dummy_rfr_data():
 
 
 def test_implied_vol_calc_call(
-    dummy_rfr_data, dummy_options_data_format1: vp.OptionsData
+    dummy_rfr_data: pd.DataFrame, dummy_options_data_format1: vp.OptionsData
 ):
     spx = 3100.29
     divs = 0.019
@@ -94,7 +94,7 @@ def test_implied_vol_calc_call(
 
 
 def test_implied_vol_calc_put(
-    dummy_rfr_data, dummy_options_data_format1: vp.OptionsData
+    dummy_rfr_data: pd.DataFrame, dummy_options_data_format1: vp.OptionsData
 ):
     spx = 3100.29
     divs = 0.019
@@ -120,7 +120,7 @@ def test_implied_vol_calc_put(
 
 
 def test_implied_vol_calc_nonsensical(
-    dummy_rfr_data, dummy_options_data_format1: vp.OptionsData
+    dummy_rfr_data: pd.DataFrame, dummy_options_data_format1: vp.OptionsData
 ):
     spx = 3100.29
     divs = 0.019
@@ -147,7 +147,7 @@ def test_implied_vol_calc_nonsensical(
 
 
 def test_implied_vol_calc_wrongOptType(
-    dummy_rfr_data, dummy_options_data_format1: vp.OptionsData
+    dummy_rfr_data: pd.DataFrame, dummy_options_data_format1: vp.OptionsData
 ):
     spx = 3100.29
     divs = 0.019
@@ -169,7 +169,7 @@ def test_implied_vol_calc_wrongOptType(
 
 
 def test_implied_vol_calc_alternate_price_def(
-    dummy_rfr_data, dummy_options_data_format1: vp.OptionsData
+    dummy_rfr_data: pd.DataFrame, dummy_options_data_format1: vp.OptionsData
 ):
     spx = 3100.29
     divs = 0.019
@@ -193,7 +193,7 @@ def test_implied_vol_calc_alternate_price_def(
     ] == pytest.approx(0.2694103)
 
 
-def test_vol_grid(dummy_options_data_format2):
+def test_vol_grid(dummy_options_data_format2: vp.OptionsData):
     dummy_options_data_format2.calculate_volatility_grid()
     # pick some random points to confirm it works
     assert dummy_options_data_format2.volatility_grid[2600][0] == pytest.approx(
@@ -204,7 +204,7 @@ def test_vol_grid(dummy_options_data_format2):
     )
 
 
-def test_vol_grid_puts(dummy_options_data_format2):
+def test_vol_grid_puts(dummy_options_data_format2: vp.OptionsData):
     # Note that this file, while having the same format as a CBOE options with calcs file, has garbage data.
     dummy_options_data_format2.calculate_volatility_grid(fit_on_calls_or_puts="puts")
     # pick some random points to confirm it works
@@ -216,7 +216,7 @@ def test_vol_grid_puts(dummy_options_data_format2):
     )
 
 
-def test_vol_grid_both(dummy_options_data_format2):
+def test_vol_grid_both(dummy_options_data_format2: vp.OptionsData):
     # Note that this file, while having the same format as a CBOE options with calcs file, has garbage data.
     dummy_options_data_format2.calculate_volatility_grid(fit_on_calls_or_puts="both")
     # pick some random points to confirm it works
