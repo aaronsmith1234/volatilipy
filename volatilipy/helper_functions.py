@@ -364,7 +364,7 @@ def _drop_sparse_columns(option_df: pd.DataFrame, threshold=0.75) -> pd.DataFram
         pd.DataFrame: Dataframe with only columns filled in up to the specified threshold
     """
     not_as_sparse_columns = option_df.dropna(
-        axis=1, thresh=round(len(option_df.index) * threshold), how="any"
+        axis=1, thresh=round(len(option_df.index) * threshold)
     )
     return not_as_sparse_columns
 
