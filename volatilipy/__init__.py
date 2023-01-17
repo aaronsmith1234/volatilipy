@@ -2,7 +2,7 @@
 
 __author__ = """Aaron Smith"""
 __email__ = "aaronsmith1234@gmail.com"
-__version__ = "0.1.3"
+__version__ = "0.1.4"
 
 # pylint: disable=unused-import
 
