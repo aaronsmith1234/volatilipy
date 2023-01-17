@@ -287,7 +287,7 @@ def _average_across_options(
         option_df.groupby(
             [column_name_mapping["strike"], column_name_mapping["expiration"]]
         )
-        .mean()
+        .mean(numeric_only=True)
         .reset_index()
     )
 
