@@ -174,34 +174,6 @@ def _create_ql_vol_grid(
     return implied_vols
 
 
-# Helper functions for the implied vol object
-def _get_option_rfr(
-    risk_free_rates: pd.DataFrame,
-    position: namedtuple,
-    day_count_convention: ql.DayCounter,
-    rate_column_name: str,
-) -> float:
-    """Method to pull market data that is specific to one option (namely volatility
-    and a risk free rate)
-
-    Args:
-        risk_free_rates (pd.DataFrame): Dataframe containing risk free rates. Used to
-            pull the risk free rate corresponding to the date of maturity of the option
-        position (namedtuple): A named tuple that represents one option position; used to
-            retrieve the maturity date and strike
-        day_count_convention (QuantLibday_count_convention): Method to determine how to count days
-        between two dates
-    Returns:
-        risk_free_rate: The risk free rate
-    """
-
-    rate = ql.SimpleQuote(risk_free_rates[rate_column_name][position.exercise_date])
-    risk_free_rate = ql.FlatForward(
-        0, ql.TARGET(), ql.QuoteHandle(rate), day_count_convention
-    )
-    return (risk_free_rate,)
-
-
 def _setup_quantlib_economy(
     valuation_date: datetime, index_values: float64, dividend_yields: float64
 ) -> Tuple:
