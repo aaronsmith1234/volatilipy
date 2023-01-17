@@ -355,10 +355,8 @@ def _drop_valdate_row(option_df: pd.DataFrame, valuation_date: date) -> pd.DataF
         pd.Timestamp(valuation_date) in option_df.index
         or valuation_date in option_df.index
     ):
-        cleaned_df = option_df.drop([valuation_date])
-    else:
-        cleaned_df = option_df
-    return cleaned_df
+        option_df = option_df.drop([valuation_date])
+    return option_df
 
 
 def _sort_df(option_df: pd.DataFrame):
@@ -375,31 +373,23 @@ def _datetime_to_quantlib_date(
     Args:
         input_datetime (Union[datetime, pd.Series]): Either a datetime object or a pandas
             series object that contains datetime objects
+        datetime_column_name (str, Optional): the index value of the datetime to convert.
+            This is only used if input_datetime is a Series containing more than one row.
+            Optional, defaults to 'exercise_date'.
 
     Returns:
         ql.Date: The same dates, represented as Quantlib objects
     """
     if isinstance(input_datetime, pd.core.series.Series):
-        cols = input_datetime.shape[0]
-        if cols > 1:
-            return_date = ql.Date(
-                input_datetime.loc[datetime_column_name].day,
-                input_datetime.loc[datetime_column_name].month,
-                input_datetime.loc[datetime_column_name].year,
-            )
+        if len(input_datetime.index) > 1:
+            input_datetime = input_datetime.loc[datetime_column_name]
         else:
-            return_date = ql.Date(
-                input_datetime[0].day,
-                input_datetime[0].month,
-                input_datetime[0].year,
-            )
-    else:
-        return_date = ql.Date(
+            input_datetime = input_datetime[0]
+    return ql.Date(
             input_datetime.day,
             input_datetime.month,
             input_datetime.year,
         )
-    return return_date
 
 
 def _create_quantlib_option(dataframe_row: pd.Series) -> ql.EuropeanOption:
