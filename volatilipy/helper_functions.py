@@ -106,28 +106,6 @@ def _generate_date_df(
     return date_df
 
 
-def _calculate_tau(
-    end_date: ql.Date,
-    start_date: ql.Date,
-    day_count_convention: ql.DayCounter,
-) -> float:
-    """Function to calculate a tau/difference in time from Quantlib objects
-
-    Args:
-        end_date (ql.Date): End date
-        start_date (ql.Date): Start date
-        day_count_convention (ql.DayCounter): What basis of days to use;
-            ActualActual, 30/360, etc.
-
-    Returns:
-        float: tau in years of the difference between the two dates
-    """
-
-    if isinstance(end_date, pd.core.series.Series):
-        end_date = end_date["QuantlibDate"]
-    return day_count_convention.yearFraction(start_date, end_date)
-
-
 def _calculate_dtm(
     end_date: ql.Date,
     start_date: ql.Date,
