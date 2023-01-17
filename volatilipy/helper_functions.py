@@ -98,10 +98,10 @@ def _generate_date_df(
     date_df = date_df.to_frame(index=True, name="expiryDate")
     date_df["QuantlibDate"] = date_df.apply(_datetime_to_quantlib_date, axis=1)
     date_df["tau"] = date_df.apply(
-        _calculate_tau, args=(vol_surface.referenceDate(), ql.ActualActual()), axis=1
+        _calculate_tau, args=(vol_surface.referenceDate(), ql.ActualActual(ql.ActualActual.ISDA)), axis=1
     )
     date_df["days_to_maturity"] = date_df.apply(
-        _calculate_dtm, args=(vol_surface.referenceDate(), ql.ActualActual()), axis=1
+        _calculate_dtm, args=(vol_surface.referenceDate(), ql.ActualActual(ql.ActualActual.ISDA)), axis=1
     )
     return date_df
 
@@ -191,7 +191,7 @@ def _setup_quantlib_economy(
         valuation_date.day, valuation_date.month, valuation_date.year
     )
     ql.Settings.instance().evaluationDate = valuation_date_for_quantlib
-    day_count_convention = ql.ActualActual()
+    day_count_convention = ql.ActualActual(ql.ActualActual.ISDA)
 
     spot = index_values
     spot_quote = ql.QuoteHandle(ql.SimpleQuote(spot))
