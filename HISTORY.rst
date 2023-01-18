@@ -1,6 +1,11 @@
 =======
 History
 =======
+0.1.4 (2023-01-17)
+------------------
+* Fix Quantlib deprecations in ActualActual() and UnitedStates().
+* Fix pandas FutureWarning involving numeric_only default value.
+
 0.1.3 (2022-10-11)
 ------------------
 * Drop the 'how' parameter from _drop_sparse_columns() for coherence with Pandas 1.5.0

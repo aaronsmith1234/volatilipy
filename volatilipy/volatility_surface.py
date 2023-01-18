@@ -22,9 +22,9 @@ class VolatilitySurface(ql.BlackVarianceSurface):
     Args:
         options_data (OptionsData): Options data on which to fit the surface
         day_count (ql.DayCounter, optional): Day counter to use with Quantlib.
-            Defaults to ql.ActualActual().
+            Defaults to ql.ActualActual(ql.ActualActual.ISDA).
         calendar (ql.Calendar, optional): Calendar to use with Quantlib.
-            Defaults to ql.UnitedStates().
+            Defaults to ql.UnitedStates(ql.UnitedStates.Settlement).
         allow_extrapolation (boolean, optional): Flag to enable extrapolation.
             Defaults to False, consistent with Quantlib.
         interpolation_method (str, optional): Define interpolation method to use.
@@ -39,8 +39,8 @@ class VolatilitySurface(ql.BlackVarianceSurface):
         self,
         options_data: OptionsData = None,
         volatility_grid: pd.DataFrame = None,
-        day_count: ql.DayCounter = ql.ActualActual(),
-        calendar: ql.Calendar = ql.UnitedStates(),
+        day_count: ql.DayCounter = ql.ActualActual(ql.ActualActual.ISDA),
+        calendar: ql.Calendar = ql.UnitedStates(ql.UnitedStates.Settlement),
         allow_extrapolation: bool = False,
         valuation_date: datetime = None,
         interpolation_method: str = "Bilinear",
